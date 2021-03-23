@@ -4,7 +4,7 @@ class Board(object):
     self.height = 6
     self.width = 6
     self.grid = []
-    self.init_grid
+    self.init_grid()
 
   def init_grid(self):
     ''' Initialize the board grid (-1 means nothing on the grid) '''

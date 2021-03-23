@@ -20,7 +20,7 @@ class Solver(object):
       filename = f'puzzle/L{puzzle_name}.txt'
       print('（讀取', filename, '中）')
       loader = PuzzleLoader(filename)
-      # print(loader.get_content())
+      puzzle_board = loader.get_puzzle_board()
 
 
 
