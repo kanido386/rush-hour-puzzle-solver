@@ -48,7 +48,8 @@ class Solver(object):
       start_time = time.perf_counter()
       ''''''
       # Solve the puzzle
-      solver = PuzzleSolver(puzzle_board)
+      solver = PuzzleSolver(puzzle_board, algorithm)
+      solution = solver.get_solution()
       ''''''
       end_time = time.perf_counter()
       time_pass = end_time - start_time
