@@ -4,6 +4,8 @@ class Car(object):
 
   def __init__(self, index, y_top_left, x_top_left, length, orientation):
     self.index = index
+    self.y_top_left = y_top_left
+    self.x_top_left = x_top_left
     self.start_location = { 'y': y_top_left, 'x': x_top_left }
     self.end_location = {}
     self.length = length
@@ -68,4 +70,4 @@ class Car(object):
   __repr__() 是給開發人員看的，主要用途為 debug
   '''  
   def __repr__(self):
-    return f'Car {self.index}: top-left at ({self.start_location['y']},{self.start_location['x']}) and has length {self.length}, orientation {self.orientation}.'
+    return f'Car {self.index}: top-left at ({self.y_top_left},{self.x_top_left}) and has length {self.length}, orientation {self.orientation}.'
