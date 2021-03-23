@@ -30,7 +30,7 @@ class Solver(object):
     print('(5) IDA*')
     print('請問您想用哪個演算法來解呀？')
     print('===================================')
-    algorithm = input('輸入 1~5 其中一個數字：')
+    algorithm = int(input('輸入 1~5 其中一個數字：'))
 
     time.sleep(1)
     print('\n收到！\n')

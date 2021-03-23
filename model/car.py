@@ -12,6 +12,9 @@ class Car(object):
     self.orientation = orientation
     self.occupied_locations = []
 
+  def get_index(self):
+    return self.index
+
   def set_start_location(self, y, x):
     ''' Set start location of the car '''
     self.start_location['y'] = y
