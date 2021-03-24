@@ -23,7 +23,7 @@ class PuzzleLoader(object):
 
 
   @staticmethod
-  def validate(self):
+  def validate(content):
     ''' Validate the content of the puzzle file '''
     # Assuming that there's no bug when loading puzzle files
     pass

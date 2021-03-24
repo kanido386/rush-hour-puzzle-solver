@@ -15,6 +15,14 @@ class Car(object):
   def get_index(self):
     return self.index
 
+  # move_forward and move_backward currently don't update these two information
+
+  # def get_y_top_left(self):
+  #   return self.y_top_left
+
+  # def get_x_top_left(self):
+  #   return self.x_top_left
+
   def get_orientation(self):
     return self.orientation
 
@@ -76,4 +84,5 @@ class Car(object):
   __repr__() 是給開發人員看的，主要用途為 debug
   '''  
   def __repr__(self):
-    return f'Car {self.index}: top-left at ({self.y_top_left},{self.x_top_left}) and has length {self.length}, orientation {self.orientation}.'
+    return f'{self.index}'
+    # return f'Car {self.index}: top-left at ({self.y_top_left},{self.x_top_left}) and has length {self.length}, orientation {self.orientation}.'

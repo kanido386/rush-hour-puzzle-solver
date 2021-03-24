@@ -50,10 +50,11 @@ class Solver(object):
       # Solve the puzzle
       solver = PuzzleSolver(puzzle_board, algorithm)
       solution = solver.get_solution()
+      print(solution)
       ''''''
       end_time = time.perf_counter()
       time_pass = end_time - start_time
-      # print(time_pass)
+      print(time_pass)
 
 
 
