@@ -18,6 +18,7 @@ class PuzzleSolver(object):
 
     elif self.algorithm == 2:   # DFS
       print('DFS')
+      return self.get_DFS_solution()
 
     elif self.algorithm == 3:   # IDS
       print('IDS')
@@ -53,6 +54,33 @@ class PuzzleSolver(object):
         # queue.append([moves + next_move, next_grid])
         if hash(str(next_grid)) not in visited:
           queue.append([moves + next_move, next_grid])
+          visited.add(hash(str(next_grid)))
+
+    return None
+
+
+  def get_DFS_solution(self):
+    ''' Run DFS algorithm to find the solution '''
+
+    grid = self.puzzle_board.get_grid()
+    visited = set()
+    start_state = [[], grid]
+    stack = [start_state]
+    num_expanded_nodes = 0
+
+    while len(stack) > 0:
+      moves, grid = stack.pop(-1)
+
+      num_expanded_nodes += 1
+      print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
+
+      if self.is_goal_state(grid):
+        return moves
+
+      for next_move, next_grid in self.get_next_states(grid):
+        # stack.append([moves + next_move, next_grid])
+        if hash(str(next_grid)) not in visited:
+          stack.append([moves + next_move, next_grid])
           visited.add(hash(str(next_grid)))
 
     return None
