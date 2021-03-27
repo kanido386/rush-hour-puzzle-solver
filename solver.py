@@ -54,6 +54,7 @@ class Solver(object):
       ''''''
       end_time = time.perf_counter()
       time_pass = end_time - start_time
+      print('\n===================================\n')
       print(f'共耗時 {time_pass} 秒\n')
 
       if solution:

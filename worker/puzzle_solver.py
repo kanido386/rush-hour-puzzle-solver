@@ -38,9 +38,13 @@ class PuzzleSolver(object):
     visited = set()
     start_state = [[], grid]
     queue = [start_state]
+    num_expanded_nodes = 0
 
     while len(queue) > 0:
       moves, grid = queue.pop(0)
+
+      num_expanded_nodes += 1
+      print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
 
       if self.is_goal_state(grid):
         return moves
@@ -81,10 +85,11 @@ class PuzzleSolver(object):
                 updated_grid
               ])
 
-        print('==============================')
-        for row in grid:
-          print(row)
-        print('==============================')
+        # For debugging
+        # print('==============================')
+        # for row in grid:
+        #   print(row)
+        # print('==============================')
 
     return states
 
