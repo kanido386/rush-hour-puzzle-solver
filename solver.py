@@ -1,4 +1,5 @@
 import time
+import os
 from worker.puzzle_loader import PuzzleLoader
 from worker.puzzle_solver import PuzzleSolver
 
@@ -56,15 +57,20 @@ class Solver(object):
       print(f'共耗時 {time_pass} 秒\n')
 
       if solution:
-        with open(f'L{puzzle_name}_solution.txt', 'w') as f:
+
+        directory = './SOLUTION'
+        if not os.path.exists(directory):
+          os.mkdir(directory)
+
+        with open(f'./SOLUTION/L{puzzle_name}_solution.txt', 'w') as f:
           print('【步驟】')
           for i, step in enumerate(solution):
-            print(f'{i+1}:', end=' ')
+            print(f'{i+1:>3}:', end=' ')
             print(step)
-            f.write(f'{i+1}: ')
+            f.write(f'{i+1:>3}: ')
             f.write(', '.join(str(el) for el in step))
             f.write('\n')
-          print(f'\n寫進 L{puzzle_name}_solution.txt 裡囉！')
+          print(f'\n寫進 ./SOLUTION/L{puzzle_name}_solution.txt 裡囉！')
 
 
 
