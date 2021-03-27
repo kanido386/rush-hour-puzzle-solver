@@ -50,11 +50,22 @@ class Solver(object):
       # Solve the puzzle
       solver = PuzzleSolver(puzzle_board, algorithm)
       solution = solver.get_solution()
-      print(solution)
       ''''''
       end_time = time.perf_counter()
       time_pass = end_time - start_time
-      print(time_pass)
+      print(f'共耗時 {time_pass} 秒\n')
+
+      if solution:
+        with open(f'L{puzzle_name}_solution.txt', 'w') as f:
+          print('【步驟】')
+          for i, step in enumerate(solution):
+            print(f'{i+1}:', end=' ')
+            print(step)
+            f.write(f'{i+1}: ')
+            f.write(', '.join(str(el) for el in step))
+            f.write('\n')
+          print(f'\n寫進 L{puzzle_name}_solution.txt 裡囉！')
+
 
 
 
