@@ -2,6 +2,7 @@ from enums.direction import Direction
 from enums.orientation import Orientation
 
 from copy import deepcopy
+# import itertools
 
 class PuzzleSolver(object):
 
@@ -22,6 +23,7 @@ class PuzzleSolver(object):
 
     elif self.algorithm == 3:   # IDS
       print('IDS')
+      return self.get_IDS_solution(30)
 
     elif self.algorithm == 4:   # A*
       print('A*')
@@ -82,6 +84,45 @@ class PuzzleSolver(object):
         if hash(str(next_grid)) not in visited:
           stack.append([moves + next_move, next_grid])
           visited.add(hash(str(next_grid)))
+
+    return None
+
+
+  def get_IDS_solution(self, max_depth):
+    ''' Run IDS algorithm to find the solution '''
+
+    total_num_expanded_nodes = 0
+
+    # d means depth
+    # for d in itertools.count():
+    for d in range(max_depth):
+
+      grid = self.puzzle_board.get_grid()
+      visited = set()
+      depth = 0
+      start_state = [[], grid, depth]
+      stack = [start_state]
+      num_expanded_nodes = 0
+
+      while len(stack) > 0:
+        moves, grid, depth = stack.pop(-1)
+
+        if self.is_goal_state(grid):
+          return moves
+
+        num_expanded_nodes += 1
+        total_num_expanded_nodes += 1
+        print(f'{len(visited)}  Depth {d}. The number of expanded nodes: (total) {total_num_expanded_nodes:>4}  (this level) {num_expanded_nodes:>4}')
+
+        # limit depth
+        if depth > d:
+          continue
+        
+        for next_move, next_grid in self.get_next_states(grid):
+          # stack.append([moves + next_move, next_grid])
+          if hash(str(next_grid)) not in visited:
+            stack.append([moves + next_move, next_grid, depth + 1])
+            visited.add(hash(str(next_grid)))
 
     return None
 
