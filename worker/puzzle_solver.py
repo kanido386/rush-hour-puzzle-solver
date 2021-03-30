@@ -27,6 +27,7 @@ class PuzzleSolver(object):
 
     elif self.algorithm == 4:   # A*
       print('A*')
+      return self.get_A_star_solution()
 
     else:                       # IDA*
       print('IDA*')
@@ -123,6 +124,43 @@ class PuzzleSolver(object):
           if hash(str(next_grid)) not in visited:
             stack.append([moves + next_move, next_grid, depth + 1])
             visited.add(hash(str(next_grid)))
+
+    return None
+
+
+  @staticmethod
+  def take_third(element):
+    ''' Take the third element for sorting (used for sorting heuristic in list) '''
+    return element[2]
+
+
+  def get_A_star_solution(self):
+    ''' Run A* algorithm to find the solution '''
+
+    grid = self.puzzle_board.get_grid()
+    visited = set()
+    heuristic = 0
+    start_state = [[], grid, heuristic]
+    priority_queue = [start_state]
+    num_expanded_nodes = 0
+
+    while len(priority_queue) > 0:
+
+      # extract a node with minimal heuristic value
+      priority_queue.sort(key=self.take_third)
+      moves, grid, previous_heuristic = priority_queue.pop(0)
+
+      if self.is_goal_state(grid):
+        return moves
+
+      num_expanded_nodes += 1
+      print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
+      
+      for next_move, next_grid in self.get_next_states(grid):
+        # priority_queue.append([moves + next_move, next_grid])
+        if hash(str(next_grid)) not in visited:
+          priority_queue.append([moves + next_move, next_grid, previous_heuristic + 1])
+          visited.add(hash(str(next_grid)))
 
     return None
 
