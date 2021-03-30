@@ -120,7 +120,7 @@ class PuzzleSolver(object):
           continue
         
         for next_move, next_grid in self.get_next_states(grid):
-          # stack.append([moves + next_move, next_grid])
+          # stack.append([moves + next_move, next_grid, depth + 1])
           if hash(str(next_grid)) not in visited:
             stack.append([moves + next_move, next_grid, depth + 1])
             visited.add(hash(str(next_grid)))
@@ -129,9 +129,32 @@ class PuzzleSolver(object):
 
 
   @staticmethod
-  def take_third(element):
-    ''' Take the third element for sorting (used for sorting heuristic in list) '''
-    return element[2]
+  def take_fourth(element):
+    ''' Take the fourth element for sorting (used for sorting heuristic in list) '''
+    return element[3]
+
+
+  def heuristic_blocking(self, grid):
+    ''' Get heuristic about cars blocking the red car '''
+
+    heuristic = 1
+    
+    if self.is_goal_state(grid):
+      return 0
+
+    for x in range(6):
+      y = 2
+      if grid[y][x] != -1 and grid[y][x].get_index() == 0:
+        x_red_car_end_location = grid[y][x].get_end_location()['x']
+        break
+
+    for x in range(x_red_car_end_location + 1, 6):
+      y = 2
+      if grid[y][x] != -1:
+        heuristic += 1
+
+    return heuristic
+
 
 
   def get_A_star_solution(self):
@@ -139,16 +162,17 @@ class PuzzleSolver(object):
 
     grid = self.puzzle_board.get_grid()
     visited = set()
+    depth = 0
     heuristic = 0
-    start_state = [[], grid, heuristic]
+    start_state = [[], grid, depth, heuristic]
     priority_queue = [start_state]
     num_expanded_nodes = 0
 
     while len(priority_queue) > 0:
 
       # extract a node with minimal heuristic value
-      priority_queue.sort(key=self.take_third)
-      moves, grid, previous_heuristic = priority_queue.pop(0)
+      priority_queue.sort(key=self.take_fourth)
+      moves, grid, depth, previous_heuristic = priority_queue.pop(0)
 
       if self.is_goal_state(grid):
         return moves
@@ -157,9 +181,13 @@ class PuzzleSolver(object):
       print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
       
       for next_move, next_grid in self.get_next_states(grid):
-        # priority_queue.append([moves + next_move, next_grid])
+        # priority_queue.append([moves + next_move, next_grid, depth + 1 + next_heuristic])
         if hash(str(next_grid)) not in visited:
-          priority_queue.append([moves + next_move, next_grid, previous_heuristic + 1])
+          # next_heuristic = self.heuristic_blocking(next_grid) + depth
+          # below one will speed up the process, don't know why 😂
+          # (probably means don't need to take the depth into account)
+          next_heuristic = self.heuristic_blocking(next_grid)
+          priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
           visited.add(hash(str(next_grid)))
 
     return None
