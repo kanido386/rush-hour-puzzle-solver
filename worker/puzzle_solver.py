@@ -6,9 +6,10 @@ from copy import deepcopy
 
 class PuzzleSolver(object):
 
-  def __init__(self, puzzle_board, algorithm):
+  def __init__(self, puzzle_board, algorithm, version):
     self.puzzle_board = puzzle_board
     self.algorithm = algorithm
+    self.version = version
 
   
   def get_solution(self):
@@ -48,6 +49,8 @@ class PuzzleSolver(object):
     while len(queue) > 0:
       moves, grid = queue.pop(0)
 
+      # print(len(moves))
+
       num_expanded_nodes += 1
       print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
 
@@ -55,10 +58,12 @@ class PuzzleSolver(object):
         return moves
 
       for next_move, next_grid in self.get_next_states(grid):
-        # queue.append([moves + next_move, next_grid])
-        if hash(str(next_grid)) not in visited:
+        if self.version == 1:
           queue.append([moves + next_move, next_grid])
-          visited.add(hash(str(next_grid)))
+        else:
+          if hash(str(next_grid)) not in visited:
+            queue.append([moves + next_move, next_grid])
+            visited.add(hash(str(next_grid)))
 
     return None
 
@@ -75,6 +80,8 @@ class PuzzleSolver(object):
     while len(stack) > 0:
       moves, grid = stack.pop(-1)
 
+      # print(len(moves))
+
       num_expanded_nodes += 1
       print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
 
@@ -82,10 +89,12 @@ class PuzzleSolver(object):
         return moves
 
       for next_move, next_grid in self.get_next_states(grid):
-        # stack.append([moves + next_move, next_grid])
-        if hash(str(next_grid)) not in visited:
+        if self.version == 1:
           stack.append([moves + next_move, next_grid])
-          visited.add(hash(str(next_grid)))
+        else:
+          if hash(str(next_grid)) not in visited:
+            stack.append([moves + next_move, next_grid])
+            visited.add(hash(str(next_grid)))
 
     return None
 
@@ -123,10 +132,12 @@ class PuzzleSolver(object):
           continue
         
         for next_move, next_grid in self.get_next_states(grid):
-          # stack.append([moves + next_move, next_grid, depth + 1])
-          if hash(str(next_grid)) not in visited:
+          if self.version == 1:
             stack.append([moves + next_move, next_grid, depth + 1])
-            visited.add(hash(str(next_grid)))
+          else:
+            if hash(str(next_grid)) not in visited:
+              stack.append([moves + next_move, next_grid, depth + 1])
+              visited.add(hash(str(next_grid)))
 
     return None
 
@@ -184,15 +195,17 @@ class PuzzleSolver(object):
       print(f'The number of expanded nodes: {num_expanded_nodes:>4} Previous heuristic: {previous_heuristic:>3}')
       
       for next_move, next_grid in self.get_next_states(grid):
-        # priority_queue.append([moves + next_move, next_grid, depth + 1 + next_heuristic])
-        if hash(str(next_grid)) not in visited:
-          next_heuristic = self.heuristic_blocking(next_grid) + depth
-          # TODO:
-          # below one will speed up the process, don't know why 😂
-          # (probably means don't need to take the depth into account)
-          # next_heuristic = self.heuristic_blocking(next_grid)
+        next_heuristic = self.heuristic_blocking(next_grid) + depth
+        if self.version == 1:
           priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
-          visited.add(hash(str(next_grid)))
+        else:
+          if hash(str(next_grid)) not in visited:
+            # TODO:
+            # below one will speed up the process, don't know why 😂
+            # (probably means don't need to take the depth into account)
+            # next_heuristic = self.heuristic_blocking(next_grid)
+            priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
+            visited.add(hash(str(next_grid)))
 
     return None
 
@@ -229,18 +242,20 @@ class PuzzleSolver(object):
         print(f'The number of expanded nodes: (total) {total_num_expanded_nodes:>4}  (this level) {num_expanded_nodes:>4} Heuristic: {previous_heuristic:>3}')
         
         for next_move, next_grid in self.get_next_states(grid):
-          # priority_queue.append([moves + next_move, next_grid, depth + 1 + next_heuristic])
-          if hash(str(next_grid)) not in visited:
-            next_heuristic = self.heuristic_blocking(next_grid) + depth
-            # limit
-            if next_heuristic > limit:
-              continue
-            # TODO:
-            # below one will speed up the process, don't know why 😂
-            # (probably means don't need to take the depth into account)
-            # next_heuristic = self.heuristic_blocking(next_grid)
-            priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
-            visited.add(hash(str(next_grid)))
+          next_heuristic = self.heuristic_blocking(next_grid) + depth
+          # limit
+          if next_heuristic > limit:
+            continue
+          if self.version == 1:
+            priority_queue.append([moves + next_move, next_grid, depth + 1 + next_heuristic])
+          else:
+            if hash(str(next_grid)) not in visited:
+              # TODO:
+              # below one will speed up the process, don't know why 😂
+              # (probably means don't need to take the depth into account)
+              # next_heuristic = self.heuristic_blocking(next_grid)
+              priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
+              visited.add(hash(str(next_grid)))
 
     return None
 

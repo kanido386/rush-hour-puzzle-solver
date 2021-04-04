@@ -17,9 +17,9 @@ class Solver(object):
     print('===================================')
     puzzle_name = input('請輸入您想要解決的關卡：')
     
-    time.sleep(1)
+    time.sleep(0.5)
     print('\n了解！\n')
-    time.sleep(1)
+    time.sleep(0.5)
 
     # Ask user which algorithm to solve with
     print('===================================')
@@ -33,9 +33,22 @@ class Solver(object):
     print('===================================')
     algorithm = int(input('輸入 1~5 其中一個數字：'))
 
-    time.sleep(1)
+    time.sleep(0.5)
     print('\n收到！\n')
-    time.sleep(1)
+    time.sleep(0.5)
+
+    # Ask user which version to solve with
+    print('===================================')
+    print('有以下兩種方式：')
+    print('(1) tree-search')
+    print('(2) graph-search')
+    print('請問您想用哪個方式來解呀？')
+    print('===================================')
+    version = int(input('輸入 1~2 其中一個數字：'))
+
+    time.sleep(0.5)
+    print('\n好的！\n')
+    time.sleep(0.5)
 
     if puzzle_name:
 
@@ -49,7 +62,7 @@ class Solver(object):
       start_time = time.perf_counter()
       ''''''
       # Solve the puzzle
-      solver = PuzzleSolver(puzzle_board, algorithm)
+      solver = PuzzleSolver(puzzle_board, algorithm, version)
       solution = solver.get_solution()
       ''''''
       end_time = time.perf_counter()
