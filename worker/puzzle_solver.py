@@ -96,7 +96,9 @@ class PuzzleSolver(object):
 
     # d means depth
     # for d in itertools.count():
-    for d in range(max_depth):
+    # TODO:
+    for d in range(0, max_depth, 20):
+    # for d in range(max_depth):
 
       grid = self.puzzle_board.get_grid()
       visited = set()
@@ -113,7 +115,7 @@ class PuzzleSolver(object):
 
         num_expanded_nodes += 1
         total_num_expanded_nodes += 1
-        print(f'{len(visited)}  Depth {d}. The number of expanded nodes: (total) {total_num_expanded_nodes:>4}  (this level) {num_expanded_nodes:>4}')
+        print(f'Depth {d}. The number of expanded nodes: (total) {total_num_expanded_nodes:>4}  (this level) {num_expanded_nodes:>4}')
 
         # limit depth
         if depth > d:
