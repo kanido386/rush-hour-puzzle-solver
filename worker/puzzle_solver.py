@@ -30,7 +30,7 @@ class PuzzleSolver(object):
       print('A*')
       return self.get_A_star_solution()
 
-    else:                       # IDA*
+    elif self.algorithm == 5:   # IDA*
       print('IDA*')
       return self.get_IDA_star_solution()
 
@@ -58,9 +58,9 @@ class PuzzleSolver(object):
         return moves
 
       for next_move, next_grid in self.get_next_states(grid):
-        if self.version == 1:
+        if self.version == 1:   # tree-search version
           queue.append([moves + next_move, next_grid])
-        else:
+        else:                   # graph-search version
           if hash(str(next_grid)) not in visited:
             queue.append([moves + next_move, next_grid])
             visited.add(hash(str(next_grid)))
@@ -89,9 +89,9 @@ class PuzzleSolver(object):
         return moves
 
       for next_move, next_grid in self.get_next_states(grid):
-        if self.version == 1:
+        if self.version == 1:   # tree-search version
           stack.append([moves + next_move, next_grid])
-        else:
+        else:                   # graph-search version
           if hash(str(next_grid)) not in visited:
             stack.append([moves + next_move, next_grid])
             visited.add(hash(str(next_grid)))
@@ -132,9 +132,9 @@ class PuzzleSolver(object):
           continue
         
         for next_move, next_grid in self.get_next_states(grid):
-          if self.version == 1:
+          if self.version == 1:   # tree-search version
             stack.append([moves + next_move, next_grid, depth + 1])
-          else:
+          else:                   # graph-search version
             if hash(str(next_grid)) not in visited:
               stack.append([moves + next_move, next_grid, depth + 1])
               visited.add(hash(str(next_grid)))
@@ -196,9 +196,9 @@ class PuzzleSolver(object):
       
       for next_move, next_grid in self.get_next_states(grid):
         next_heuristic = self.heuristic_blocking(next_grid) + depth
-        if self.version == 1:
+        if self.version == 1:   # tree-search version
           priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
-        else:
+        else:                   # graph-search version
           if hash(str(next_grid)) not in visited:
             # TODO:
             # below one will speed up the process, don't know why 😂
@@ -246,9 +246,9 @@ class PuzzleSolver(object):
           # limit
           if next_heuristic > limit:
             continue
-          if self.version == 1:
+          if self.version == 1:   # tree-search version
             priority_queue.append([moves + next_move, next_grid, depth + 1 + next_heuristic])
-          else:
+          else:                   # graph-search version
             if hash(str(next_grid)) not in visited:
               # TODO:
               # below one will speed up the process, don't know why 😂
