@@ -31,6 +31,7 @@ class PuzzleSolver(object):
 
     else:                       # IDA*
       print('IDA*')
+      return self.get_IDA_star_solution()
 
     return None
 
@@ -180,17 +181,66 @@ class PuzzleSolver(object):
         return moves
 
       num_expanded_nodes += 1
-      print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
+      print(f'The number of expanded nodes: {num_expanded_nodes:>4} Previous heuristic: {previous_heuristic:>3}')
       
       for next_move, next_grid in self.get_next_states(grid):
         # priority_queue.append([moves + next_move, next_grid, depth + 1 + next_heuristic])
         if hash(str(next_grid)) not in visited:
-          # next_heuristic = self.heuristic_blocking(next_grid) + depth
+          next_heuristic = self.heuristic_blocking(next_grid) + depth
+          # TODO:
           # below one will speed up the process, don't know why 😂
           # (probably means don't need to take the depth into account)
-          next_heuristic = self.heuristic_blocking(next_grid)
+          # next_heuristic = self.heuristic_blocking(next_grid)
           priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
           visited.add(hash(str(next_grid)))
+
+    return None
+
+
+  def get_IDA_star_solution(self):
+    ''' Run IDA* algorithm to find the solution '''
+
+    limit = 0
+    total_num_expanded_nodes = 0
+
+    while True:
+
+      limit += 5
+
+      grid = self.puzzle_board.get_grid()
+      visited = set()
+      depth = 0
+      heuristic = 0
+      start_state = [[], grid, depth, heuristic]
+      priority_queue = [start_state]
+      num_expanded_nodes = 0
+
+      while len(priority_queue) > 0:
+
+        # extract a node with minimal heuristic value
+        priority_queue.sort(key=self.take_fourth)
+        moves, grid, depth, previous_heuristic = priority_queue.pop(0)
+
+        if self.is_goal_state(grid):
+          return moves
+
+        total_num_expanded_nodes += 1
+        num_expanded_nodes += 1
+        print(f'The number of expanded nodes: (total) {total_num_expanded_nodes:>4}  (this level) {num_expanded_nodes:>4} Heuristic: {previous_heuristic:>3}')
+        
+        for next_move, next_grid in self.get_next_states(grid):
+          # priority_queue.append([moves + next_move, next_grid, depth + 1 + next_heuristic])
+          if hash(str(next_grid)) not in visited:
+            next_heuristic = self.heuristic_blocking(next_grid) + depth
+            # limit
+            if next_heuristic > limit:
+              continue
+            # TODO:
+            # below one will speed up the process, don't know why 😂
+            # (probably means don't need to take the depth into account)
+            # next_heuristic = self.heuristic_blocking(next_grid)
+            priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
+            visited.add(hash(str(next_grid)))
 
     return None
 
