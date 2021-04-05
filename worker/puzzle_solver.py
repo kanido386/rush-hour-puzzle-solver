@@ -24,7 +24,7 @@ class PuzzleSolver(object):
 
     elif self.algorithm == 3:   # IDS
       print('IDS')
-      return self.get_IDS_solution(30)
+      return self.get_IDS_solution(100)
 
     elif self.algorithm == 4:   # A*
       print('A*')
@@ -55,6 +55,7 @@ class PuzzleSolver(object):
       print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
 
       if self.is_goal_state(grid):
+        print(len(queue))
         return moves
 
       for next_move, next_grid in self.get_next_states(grid):
@@ -86,6 +87,7 @@ class PuzzleSolver(object):
       print(f'The number of expanded nodes: {num_expanded_nodes:>4}')
 
       if self.is_goal_state(grid):
+        print(len(stack))
         return moves
 
       for next_move, next_grid in self.get_next_states(grid):
@@ -106,9 +108,7 @@ class PuzzleSolver(object):
 
     # d means depth
     # for d in itertools.count():
-    # TODO:
-    for d in range(0, max_depth, 20):
-    # for d in range(max_depth):
+    for d in range(max_depth):
 
       grid = self.puzzle_board.get_grid()
       visited = set()
@@ -120,7 +120,10 @@ class PuzzleSolver(object):
       while len(stack) > 0:
         moves, grid, depth = stack.pop(-1)
 
+        # print(len(moves))
+
         if self.is_goal_state(grid):
+          print(len(stack))
           return moves
 
         num_expanded_nodes += 1
@@ -188,22 +191,25 @@ class PuzzleSolver(object):
       priority_queue.sort(key=self.take_fourth)
       moves, grid, depth, previous_heuristic = priority_queue.pop(0)
 
+      # print(len(moves))
+
       if self.is_goal_state(grid):
+        print(len(priority_queue))
         return moves
 
       num_expanded_nodes += 1
       print(f'The number of expanded nodes: {num_expanded_nodes:>4} Previous heuristic: {previous_heuristic:>3}')
       
       for next_move, next_grid in self.get_next_states(grid):
-        next_heuristic = self.heuristic_blocking(next_grid) + depth
+        # next_heuristic = self.heuristic_blocking(next_grid) + depth
+        # TODO:
+        # below one will speed up the process, don't know why 😂
+        # (probably means don't need to take the depth into account)
+        next_heuristic = self.heuristic_blocking(next_grid)
         if self.version == 1:   # tree-search version
           priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
         else:                   # graph-search version
           if hash(str(next_grid)) not in visited:
-            # TODO:
-            # below one will speed up the process, don't know why 😂
-            # (probably means don't need to take the depth into account)
-            # next_heuristic = self.heuristic_blocking(next_grid)
             priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
             visited.add(hash(str(next_grid)))
 
@@ -234,7 +240,10 @@ class PuzzleSolver(object):
         priority_queue.sort(key=self.take_fourth)
         moves, grid, depth, previous_heuristic = priority_queue.pop(0)
 
+        # print(len(moves))
+
         if self.is_goal_state(grid):
+          print(len(priority_queue))
           return moves
 
         total_num_expanded_nodes += 1
@@ -242,18 +251,18 @@ class PuzzleSolver(object):
         print(f'The number of expanded nodes: (total) {total_num_expanded_nodes:>4}  (this level) {num_expanded_nodes:>4} Heuristic: {previous_heuristic:>3}')
         
         for next_move, next_grid in self.get_next_states(grid):
-          next_heuristic = self.heuristic_blocking(next_grid) + depth
+          # next_heuristic = self.heuristic_blocking(next_grid) + depth
+          # TODO:
+          # below one will speed up the process, don't know why 😂
+          # (probably means don't need to take the depth into account)
+          next_heuristic = self.heuristic_blocking(next_grid)
           # limit
           if next_heuristic > limit:
             continue
           if self.version == 1:   # tree-search version
-            priority_queue.append([moves + next_move, next_grid, depth + 1 + next_heuristic])
+            priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
           else:                   # graph-search version
             if hash(str(next_grid)) not in visited:
-              # TODO:
-              # below one will speed up the process, don't know why 😂
-              # (probably means don't need to take the depth into account)
-              # next_heuristic = self.heuristic_blocking(next_grid)
               priority_queue.append([moves + next_move, next_grid, depth + 1, next_heuristic])
               visited.add(hash(str(next_grid)))
 
